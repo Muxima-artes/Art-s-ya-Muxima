@@ -1,102 +1,200 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-// import * as firebase from 'firebase';
-// import firebase from 'firebase'
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-// import '@firebase/firestore';
+import { StyleSheet, ScrollView, Text, Image, View, TouchableOpacity, TextInput } from 'react-native';
+import { ExpoConfigView } from '@expo/samples';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCr-70l2kyhKvJfaM6TCn0GYG8qbHIhLNw",
-  authDomain: "muxima-artes.firebaseapp.com",
-  databaseURL: "https://muxima-artes.firebaseio.com",
-  projectId: "muxima-artes",
-  storageBucket: "muxima-artes.appspot.com"
-};
+import * as FirebaseAPI from '../modules/firebaseAPI';
 
-firebase.initializeApp(firebaseConfig);
+export default class SettingsScreen extends React.Component {
 
-const dbh = firebase.firestore();
+  logout(navigation) {
+    console.log('logout() called', navigation)
+    FirebaseAPI.logoutUser()
 
-dbh.collection("characters").doc("mario").set({
-  employment: "plumber",
-  outfitColor: "red",
-  specialAttack: "fireball"
-})
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate('Auth')
+    })
+  }
 
-export default function SettingsScreen() {
-  return(
-    <View style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.title}>Login</Text>
-        <View>
-          <Text style={styles.inputsText}>Email</Text>
-          <TextInput style={styles.inputs}></TextInput>
-          <Text style={styles.inputsText}>Password</Text>
-          <TextInput style={styles.inputs}></TextInput>
+  static navigationOptions = {
+    header: (
+      <View
+        style={{
+          height: 80,
+          width: "100%",
+          paddingTop: 20,
+          elevation: 6,
+          backgroundColor: "white",
+        }}
+      >
+        <View style={{
+          width: "90%",
+          margin: 10,
+          marginTop: 20,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}>
+          <Text style={{
+              fontWeight: "bold",
+              fontSize: 18,
+          }}>Configurações</Text>
+          <TouchableOpacity onPress={() => {this.logout(this.props.navigation)}}>
+            <Text style={{
+              fontWeight: "bold",
+              fontSize: 18,
+            }}>Logout</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.login}><Text style={styles.loginText}>Entrar</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.register}><Text style={styles.registerText}>Registrar</Text></TouchableOpacity>
       </View>
-    </View>
-  );
+    )
+  };
+
+  render() {
+    return(
+      <ScrollView style={styles.container}>
+        <View style={styles.user}>
+          <View style={styles.userPhoto}/>
+          <View style={styles.userProfile}>
+            <Text style={{fontWeight:"bold"}}>Marcelo Rodrigues Campos</Text>
+            <Text>avaliaçoes positivas: 80%</Text>
+            <Text>email@teste.com.br</Text>
+            <Text>11964665563</Text>
+          </View>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.register}
+            onPress={() => this.props.navigation.navigate('AddProduct')}
+          >
+            <View>
+              <Text style={styles.registerText}>Anunciar</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.titleText}>Seus produtos</Text>
+        <View style={styles.posts}>
+
+          <View style={styles.post} >
+            <Text style={styles.postName}>Carro</Text>
+            <View style={styles.postImageView}>
+              <Image style={styles.postImage} source={require('../assets/images/vestido.jpg')}/>
+            </View>
+            <View style={styles.postDesc}>
+              <Text style={styles.rate}>**** rate</Text>
+              <Text style={styles.date}>created date</Text>
+            </View>
+          </View>
+
+          <View style={styles.post} >
+            <Text style={styles.postName}>Carro</Text>
+            <View style={styles.postImageView}>
+              <Image style={styles.postImage} source={require('../assets/images/vestido.jpg')}/>
+            </View>
+            <View style={styles.postDesc}>
+              <Text style={styles.rate}>**** rate</Text>
+              <Text style={styles.date}>created date</Text>
+            </View>
+          </View>
+
+          <View style={styles.post} >
+            <Text style={styles.postName}>Carro</Text>
+            <View style={styles.postImageView}>
+              <Image style={styles.postImage} source={require('../assets/images/vestido.jpg')}/>
+            </View>
+            <View style={styles.postDesc}>
+              <Text style={styles.rate}>**** rate</Text>
+              <Text style={styles.date}>created date</Text>
+            </View>
+          </View>
+
+
+        </View>
+      </ScrollView>
+    )
+  }
 }
-
-SettingsScreen.navigationOptions = {
-  headerMode: 'none'
-};
-
 
 const styles = StyleSheet.create({
   container: {
-
-  },
-  form: {
-    flexDirection: "column",
-    // alignItems: "center",
-    justifyContent: "space-around",
-    // height: 250, // 300
-    height: 420, // 450
+    flex: 1,
+    // paddingTop: 15,
     margin: 20,
+    backgroundColor: '#fff',
   },
-  title: {
-    fontWeight: "bold",
-    fontSize: 32,
+  user: {
+    flexDirection: "row",
+    margin: 10,
   },
-  inputsText: {
-    fontSize: 14,
-  },
-  inputs: {
-    marginBottom: 10,
-    borderColor: "#5cdb7c",
-    padding: 5,
-    borderBottomWidth: 2,
-    backgroundColor: "white",
-  },
-  login: {
-    borderRadius: 5,
-    elevation: 6,
-    padding: 5,
+  userPhoto: {
+    flex: 1,
     backgroundColor: "#5cdb7c",
+    borderRadius: 50,
   },
-  loginText: {
-    textAlign: "center",
-    textAlignVertical: "center",
-    fontSize: 26,
-    color: "white",
+  userProfile: {
+    margin: 20,
+    flex: 2,
   },
   register: {
-    borderRadius: 5,
-    elevation: 6,
-    borderColor: "#5cdb7c",
     borderWidth: 2,
-    padding: 5,
+    borderColor: "#5cdb7c",
     backgroundColor: "white",
+    width: "100%",
+    padding: 15,
+    marginTop: '5%',
   },
   registerText: {
-    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
     color: "#5cdb7c",
-    textAlignVertical: "center",
-    fontSize: 26,
   },
+
+
+
+
+
+
+
+
+
+  titleText: {
+    fontSize: 20,
+    margin: 10,
+  },
+
+  posts: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    // alignContent: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 5,
+  },
+  post: {
+    backgroundColor: "white",
+    elevation: 6,
+    borderRadius: 3,
+    width: "45%",
+    height: 175,
+    marginBottom: 15,
+  },
+  postName: {
+    marginLeft: 10,
+    padding: 5,
+    fontSize: 14,
+  },
+  postImageView: {
+    borderColor: "gray",
+    // borderBottomWidth: 2,
+    // borderTopWidth: 2,
+    height: 10,
+  },
+  postImage: {
+    resizeMode: "stretch",
+    maxWidth: "100%",
+    maxHeight: 80,
+  },
+  postDesc: {
+    padding: 5,
+    marginLeft: 10,
+    marginTop: 80,
+  }
 });

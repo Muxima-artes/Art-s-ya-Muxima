@@ -9,6 +9,9 @@
       "android",
       "web"
     ],
+    "android": {
+      "package": "com.muxima.muxima"
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -24,6 +27,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.muxima.muxima",
       "supportsTablet": true
     }
   }

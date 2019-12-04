@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -8,131 +7,31 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
-  TextInput
+  InteractionManager,
+  TextInput,
 } from 'react-native';
 
-import { MonoText } from '../components/StyledText';
-import { genericTypeAnnotation } from '@babel/types';
-import { getCurrentFrame } from 'expo/build/AR';
+import * as FirebaseAPI from '../modules/firebaseAPI';
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        
-        {/* <TextInput style={styles.searchInput} placeholder="What are you looking for?"></TextInput> */}
+export default class HomeScreen extends React.Component {
 
-        <View style={styles.titleView}>
-          <Text style={styles.titleText}>Popular itens</Text>
-          <Text style={styles.titleTextPartner}>See All</Text>
-        </View>
-        <ScrollView style={styles.exploreView} horizontal={true}>
-          <TouchableOpacity style={styles.exploreItem}>
-            <View style={styles.exploreItemImage}>
-              <Image style={{resizeMode: "repeat"}} source={require('../assets/images/vestido.jpg')}/>
-            </View>
-            <View style={styles.exploreItemName}>
-              <Text>Vestidos</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.exploreItem}>
-            <View style={styles.exploreItemImage}></View>
-            <View style={styles.exploreItemName}>
-              <Text>Vestidos</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.exploreItem}>
-            <View style={styles.exploreItemImage}></View>
-            <View style={styles.exploreItemName}>
-              <Text>Vestidos</Text>
-            </View>
-          </TouchableOpacity>
-        </ScrollView>
-
-        <Text style={styles.titleText}>Categorias</Text>
-        <View style={styles.categoriesView}>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.categoriesItem}>
-            <Text style={styles.categoriesItemText}>Camisa</Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-            <Text>Anuncio ?</Text>
-      </View>
-    </View>
-  );
-}
-
-// HomeScreen.navigationOptions = {
-//   header: null,
-// };
-HomeScreen.navigationOptions = {
-  header: ( /* Your custom header */
-    <View
-      style={{
-        height: 90,
-        width: "100%",
-        paddingTop: 20,
-        elevation: 6,
-        backgroundColor: "white",
-      }}
-    >
-      <View style={{
-        width: "90%",
-        margin: 10,
-        marginTop: 18,
-        flexDirection: "row",
-        // backgroundColor: "grey",
-        justifyContent: "space-between",
-      }}>
-        <View
-          style={{
-            backgroundColor: "#5cdb7c",
-            borderRadius: 50,
-            width: 40,
-            height: 40,
-          }} />
-        {/* <Text style={{color: "black", fontSize: 22, fontWeight: "bold", textAlignVertical: "center"}}>Muxima</Text> */}
-        <TextInput 
-          style={{
-            // display: "none",
-            marginLeft: 15,
-            flexGrow: 2,
-            alignSelf: "center",
-            padding: 10,
-            color: "black",
-            elevation: 6,
-            
-            borderRadius: 3,
-            borderWidth: 1,
-            borderColor: "#5cdb7c",
-            backgroundColor: "white",
-          }} 
-          placeholder="What are you looking for?"
-        />
-        {/* <View style={{
-          display: "none",
-          flexDirection: "row"
+  static navigationOptions = {
+    header: (
+      <View
+        style={{
+          height: 80,
+          width: "100%",
+          paddingTop: 20,
+          elevation: 6,
+          backgroundColor: "white",
+        }}
+      >
+        <View style={{
+          width: "90%",
+          margin: 10,
+          marginTop: 13,
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}>
           <View
             style={{
@@ -140,32 +39,102 @@ HomeScreen.navigationOptions = {
               borderRadius: 50,
               width: 40,
               height: 40,
-            }}
-          />
-          <View
+            }} />
+          <TextInput
+            placeholder="O que você procura ?"
             style={{
-              marginLeft: 10,
-              backgroundColor: "#5cdb7c",
-              borderRadius: 50,
-              width: 40,
-              height: 40,
-            }}
+              marginLeft: 15,
+              flexGrow: 2,
+              alignSelf: "center",
+              padding: 10,
+              color: "black",
+              elevation: 6,
+              borderRadius: 3,
+              borderWidth: 1,
+              borderColor: "#5cdb7c",
+              backgroundColor: "white",
+            }} 
           />
-        </View> */}
-
+        </View>
       </View>
-    </View>
-  )
-  // title: 'Muxima',
-  // headerStyle: {
-  //   borderColor: "grey",
-  // },
-  // headerTintColor: '#fff',
-  // headerTitleStyle: {
-  //   color: "black",
-  //   fontWeight: 'bold',
-  // },
-};
+    )
+  };
+
+  logout(navigation) {
+    console.log('logout() called', navigation)
+    FirebaseAPI.logoutUser()
+
+    InteractionManager.runAfterInteractions(() => {
+      navigation.navigate('Auth')
+    })
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}>  
+          <View style={styles.titleView}>
+            <Text style={styles.titleText}>Itens populares</Text>
+            <Text style={styles.titleTextPartner}>Ver todos</Text>
+          </View>
+          <ScrollView style={styles.exploreView} horizontal={true}>
+            <TouchableOpacity style={styles.exploreItem}>
+              <View style={styles.exploreItemImage}>
+                <Image style={{resizeMode: "repeat"}} source={require('../assets/images/vestido.jpg')}/>
+              </View>
+              <View style={styles.exploreItemName}>
+                <Text>Vestidos</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.exploreItem}>
+              <View style={styles.exploreItemImage}></View>
+              <View style={styles.exploreItemName}>
+                <Text>Vestidos</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.exploreItem}>
+              <View style={styles.exploreItemImage}></View>
+              <View style={styles.exploreItemName}>
+                <Text>Vestidos</Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
+  
+          <Text style={styles.titleText}>Categorias</Text>
+          <View style={styles.categoriesView}>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.categoriesItem}>
+              <Text style={styles.categoriesItemText}>Camisa</Text>
+            </TouchableOpacity>
+          </View>
+  
+        </ScrollView>
+  
+        <View style={styles.tabBarInfoContainer}>
+          <TouchableOpacity onPress={() => {this.logout(this.props.navigation)}}>
+            <Text style={styles.tabBarInfoText}>Logout</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -224,7 +193,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: 160,
-    // backgroundColor: "gray",
   },
   exploreItem: {
     width: 160,
@@ -240,8 +208,6 @@ const styles = StyleSheet.create({
   },
   exploreItemName: {
     height: "100%",
-    textAlign: "center",
-    textAlignVertical: "center",
     width: "100%",
     backgroundColor: "white",
   },
@@ -250,22 +216,18 @@ const styles = StyleSheet.create({
   categoriesView: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "space-around",
     width: "100%",
-    // height: 250,
     paddingBottom: 2,
     paddingTop: 2,
-    // backgroundColor: "gray",
   },
   categoriesItem: {
-    // width: "46%",
-    // var {height, width} = Dimensions.get('window');
-    width: Dimensions.get('window').width / 2 - 10,
+    justifyContent: "center",
+    width: "45%",
     height: 50,
     margin: 5,
     elevation: 6,
     borderRadius: 3,
-    // borderColor: "#5cdb7c",
-    // borderWidth: 1,
     backgroundColor: "white",
   },
   categoriesItemText: {
