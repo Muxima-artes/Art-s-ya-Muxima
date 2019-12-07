@@ -1,54 +1,58 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Text, Image, View, TouchableOpacity, TextInput } from 'react-native';
-import { ExpoConfigView } from '@expo/samples';
+import { StyleSheet, InteractionManager, ScrollView, Text, Image, View, TouchableOpacity, TextInput } from 'react-native';
 
 import * as FirebaseAPI from '../modules/firebaseAPI';
 
 export default class SettingsScreen extends React.Component {
 
   logout(navigation) {
-    console.log('logout() called', navigation)
-    FirebaseAPI.logoutUser()
-
+    // FirebaseAPI.logoutUser()
     InteractionManager.runAfterInteractions(() => {
-      navigation.navigate('Auth')
+      navigation.navigate('Auth');
     })
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, logout }) => ({
     header: (
       <View
-        style={{
-          height: 80,
-          width: "100%",
-          paddingTop: 20,
-          elevation: 6,
-          backgroundColor: "white",
-        }}
-      >
-        <View style={{
-          width: "90%",
-          margin: 10,
-          marginTop: 20,
-          flexDirection: "row",
-          justifyContent: "space-between",
+      style={{
+        height: 80,
+        width: "100%",
+        paddingTop: 20,
+        elevation: 6,
+        backgroundColor: "white",
+      }}
+    >
+      <View style={{
+        width: "90%",
+        margin: 10,
+        marginTop: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}>
+        <Text style={{
+            fontWeight: "bold",
+            fontSize: 18,
+        }}>Configurações</Text>
+        <TouchableOpacity onPress={() => {
+          FirebaseAPI.logoutUser()
+          InteractionManager.runAfterInteractions(() => {
+            navigation.navigate('Auth');
+          })
         }}>
           <Text style={{
-              fontWeight: "bold",
-              fontSize: 18,
-          }}>Configurações</Text>
-          <TouchableOpacity onPress={() => {this.logout(this.props.navigation)}}>
-            <Text style={{
-              fontWeight: "bold",
-              fontSize: 18,
-            }}>Logout</Text>
-          </TouchableOpacity>
-        </View>
+            fontWeight: "bold",
+            fontSize: 18,
+          }}>Logout</Text>
+        </TouchableOpacity>
       </View>
+    </View>
     )
-  };
+  });
 
   render() {
+    const { logout } = this;
+    const { navigation } = this.props.navigation;
     return(
       <ScrollView style={styles.container}>
         <View style={styles.user}>

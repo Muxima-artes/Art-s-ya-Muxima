@@ -3,7 +3,6 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  Platform,
   TextInput,
   TouchableOpacity,
  } from 'react-native';
@@ -46,6 +45,10 @@ export default class LoginScreen extends React.Component {
     FirebaseAPI.signInUser(this.state.email, this.state.password)
   }
 
+  signInGoogle() {
+    FirebaseAPI.signInGoogle()
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -80,6 +83,15 @@ export default class LoginScreen extends React.Component {
           >
             <View>
               <Text style={styles.registerText}>Registrar</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.google}
+            // onPress={() => this.signInGoogle()}
+            onPress={() => { }}
+          >
+            <View>
+              <Text style={styles.googleText}>Logar com o Google</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -138,6 +150,19 @@ const styles = StyleSheet.create({
     color: "white",
   },
   registerText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#5cdb7c",
+  },
+  google: {
+    borderWidth: 2,
+    borderColor: "#5cdb7c",
+    backgroundColor: "white",
+    width: "100%",
+    padding: 15,
+    marginTop: '15%',
+  },
+  googleText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#5cdb7c",
