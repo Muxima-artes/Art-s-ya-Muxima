@@ -61,12 +61,13 @@ export default class AddProductScreen extends React.Component {
         const dbh = firebase.firestore();
         dbh.collection("posts").add({
             name: this.state.name,
-            image: this.state.imageUrl,
-            date: Date(),
+            // image: this.state.imageUrl,
+            // date: Date(),
             price: this.state.price,
-            status: 1,
-            amount: this.state.amount,
-            amountBought: 0,
+            desc: this.state.desc,
+            // status: 1,
+            // amount: this.state.amount,
+            // amountBought: 0,
         });
         var ref = firebase.storage().ref().child("my-image");
         ref.put(this.state.blob);

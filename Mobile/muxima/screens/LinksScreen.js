@@ -55,7 +55,10 @@ export default class LinksScreen extends React.Component {
             <Text style={styles.productAmountText}>Quantidade</Text>
             <TextInput style={styles.productAmountInput}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buy}>
+          <TouchableOpacity 
+            style={styles.buy}
+            onPress={() => this.props.navigation.navigate('BuyProduct')}
+          >
             <Text style={styles.buyText}>Comprar</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.addToCart}>

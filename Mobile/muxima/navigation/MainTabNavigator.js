@@ -7,7 +7,9 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AddProductScreen from '../screens/AddProductScreen';
-import LoginScreen from '../screens/LoginScreen';
+import BuyProductScreen from '../screens/buyProductScreen';
+import CategoriesScreen from '../screens/CategoriesScreen';
+// import LoginScreen from '../screens/LoginScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -22,6 +24,24 @@ HomeStack.navigationOptions = {
         Platform.OS === 'ios'
           ? `ios-home${focused ? '' : '-outline'}`
           : 'md-home'
+      }
+    />
+  ),
+};
+
+const CategoriesStack = createStackNavigator({
+  Categories: CategoriesScreen,
+})
+
+CategoriesStack.navigationOptions = {
+  tabBarLabel: 'Categories',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `ios-list${focused ? '' : '-outline'}`
+          : 'md-list'
       }
     />
   ),
@@ -47,6 +67,7 @@ LinksStack.navigationOptions = {
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
   AddProduct: AddProductScreen,
+  BuyProduct: BuyProductScreen,
 });
 
 SettingsStack.navigationOptions = {
@@ -64,6 +85,7 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
+  CategoriesStack,
   LinksStack,
   SettingsStack,
 },{

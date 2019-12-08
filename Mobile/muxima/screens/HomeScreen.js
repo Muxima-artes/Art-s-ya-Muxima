@@ -18,6 +18,53 @@ import * as FirebaseAPI from '../modules/firebaseAPI';
 
 export default class HomeScreen extends React.Component {
 
+// Firebase ------------------------------------------
+
+  constructor() {
+    super();
+    this.ref = firebase.firestore().collection('posts');
+    // this.refPopular = firebase.firestore().collection('popular');
+    this.unsubscribe = null;
+    this.state = {
+      posts: [],
+      loading: true,
+      // popular: [],
+    };
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate)
+    // this.unsubscribePopular = this.refPopular.onSnapshot(this.onCollectionUpdate)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+    // this.unsubscribePopular();
+  }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const posts = [];
+    querySnapshot.forEach((doc) => {
+      const { name, image } = doc.data();
+      posts.push({
+        key: doc.id, 
+        doc, 
+        name,
+        // price,
+        // image,
+        // amount,
+        // desc,
+      });
+    });
+    this.setState({
+      posts,
+      loading: false,
+   });
+   console.log(posts);
+  }
+
+// Navigation ------------------------------------------
+
   static navigationOptions = {
     header: (
       <View
@@ -63,8 +110,9 @@ export default class HomeScreen extends React.Component {
     )
   };
 
+// Logou ------------------------------------------
+
   logout(navigation) {
-    console.log('logout() called', navigation)
     FirebaseAPI.logoutUser()
 
     InteractionManager.runAfterInteractions(() => {
@@ -99,8 +147,7 @@ export default class HomeScreen extends React.Component {
       },
     ];
 
-    const ref = firebase.firestore().collection('posts');
-
+// View Function ------------------------------------------
 
     function CardItem({ title }) {
       return (
@@ -117,11 +164,13 @@ export default class HomeScreen extends React.Component {
         <Image style={{ resizeMode: "repeat" }} source={require('../assets/images/vestido.jpg')} />
       </View>
       <View style={styles.exploreItemName}>
-        <Text>{title}</Text>
+        <Text style={styles.exploreItemText}>{title}</Text>
       </View>
     </TouchableOpacity>
     );
   }
+
+// Return ------------------------------------------
 
     return (
       <View style={styles.container}>
@@ -146,9 +195,9 @@ export default class HomeScreen extends React.Component {
           </View>
           <ScrollView style={styles.exploreView} horizontal={true}>
             <FlatList
-              data={ref}
+              data={this.state.posts}
               renderItem={({ item }) => <ExploreItem title={item.name}/>}
-              keyExtractor={item => item.id}
+              // keyExtractor={item => item.id}
               horizontal={true}
             />
           </ScrollView>  
@@ -280,6 +329,10 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     backgroundColor: "white",
+  },
+  exploreItemText: {
+    fontSize: 16,
+    margin: 10,
   },
 // ----------------------------------
 
